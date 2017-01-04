@@ -8,12 +8,11 @@ Generates a report on the instances running under an AWS account, including
 how many of what types, and if there are reserved instances being used or
 underused 
 
-
+```
 usage: instance-report.py [-h] [-d] [-p PROFILE] [-r REGION] [-N] [-t TYPE]
                           [-R]
 
 Instance-report reports on your ec2 reserved vs on demand instances
-
 optional arguments:
   -h, --help            show this help message and exit
   -d, --debug           Enable debugging during execution.
@@ -26,7 +25,7 @@ optional arguments:
                         non-reservations
   -t TYPE, --type TYPE  Specific instance type
   -R, --report          instance report
-
+```
 The script uses your aws credentials, and can distinguish between profiles with
 the -p flag. 
 
@@ -37,7 +36,7 @@ instance report including region, type and number.
 
 Generate a report on soon to expire instance reservations.
 
-
+```
 usage: reserved-expiration.py [-h] [-D] [-p PROFILE] [-d DAYS] [-t]
 
 check for expiring reserved instances
@@ -50,6 +49,7 @@ optional arguments:
   -d DAYS, --days DAYS  Report instances that expire in D days
   -t, --text            Output in text fmt, not json
 
+```
 
 The script uses your aws credentials, and can distinguish between profiles with
 the -p flag. 

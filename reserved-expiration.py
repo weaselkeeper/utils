@@ -29,27 +29,6 @@ logging.getLogger(PROJECTNAME).addHandler(console)
 log = logging.getLogger(PROJECTNAME)
 
 
-AWS_REGIONS = [ 'us-east-1',
-		'us-east-2',
-		'us-west-1',
-		'us-west-2' ]
-
-
-INSTANCE_TYPES = [ 'c3.large',
-                    'c4.xlarge',
-                    'm1.small',
-                    'm3.large',
-                    'm3.medium',
-                    'm3.xlarge',
-                    'm4.4xlarge',
-                    'm4.large',
-                    'r3.2xlarge',
-                    'r3.large',
-                    'r3.xlarge',
-                    't2.medium',
-                    't2.nano',
-                    't2.small', ]
-
 def get_options():
     """ Parse the command line options"""
     import argparse
@@ -59,8 +38,7 @@ def get_options():
     parser.add_argument('-D', '--debug', action='store_true', \
                         help='Enable debugging during execution.', \
                         default=None)
-    parser.add_argument('-p', '--profile', action='store', default='default', \
-			help='Which AWS profile to use, defaults to default')
+    parser.add_argument('-p', '--profile', action='store', help='Which AWS profile to use.')
     parser.add_argument('-d', '--days', help="Report instances that expire in D days", required=False, action='store', default = 30)
     parser.add_argument('-t', '--text', action='store_true', help='Output in text fmt, not json')
     _args = parser.parse_args()
@@ -81,14 +59,18 @@ def get_args():
     return _args
 
 
-
 def get_data():
     # replace this with a shell out to get the info,
     # command example aws --profile prod ec2 describe-reserved-instances   --filter Name=state,Values=active
     # build command 
-    profile = args.profile
-    commandquery = ["aws", "--profile", profile,"ec2", "describe-reserved-instances", "--filter", "Name=state,Values=active"]
-    result = subprocess.Popen(commandquery, stdout=subprocess.PIPE)
+    
+    env_vars = os.environ.copy()
+    if args.profile:
+        profile = args.profile
+        commandquery = ["aws", "--profile", profile,"ec2", "describe-reserved-instances", "--filter", "Name=state,Values=active"]
+    else:
+        commandquery = ["aws", "ec2", "describe-reserved-instances", "--filter", "Name=state,Values=active"]
+    result = subprocess.Popen(commandquery, stdout=subprocess.PIPE,env=env_vars)
     reservations_data,RC = result.communicate([0])
     reservations = json.loads(reservations_data)
     return reservations

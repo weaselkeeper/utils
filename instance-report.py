@@ -58,8 +58,7 @@ def get_options():
     parser.add_argument('-d', '--debug', action='store_true',
                         help='Enable debugging during execution.',
                         default=None)
-    parser.add_argument('-p', '--profile', action='store', default='default', 
-			help='Which AWS profile to use, defaults to default')
+    parser.add_argument('-p', '--profile', action='store', help='Which AWS profile to use.')
     parser.add_argument('-r', '--region', action='store', default='us-east-1',
                         help='Must be valid region in AWS_REGIONS list, if empty, defaults to us-east-1')
     parser.add_argument('-N', '--names', help="Include names or instance IDs of instances that fit non-reservations", required=False, action='store_true')
@@ -87,10 +86,17 @@ def get_args():
 
 
 def get_connection(args):
-    if args.region:
-        ec2_conn = boto.ec2.connect_to_region( args.region, profile_name=args.profile )
+    if args.profile:
+        if args.region:
+            ec2_conn = boto.ec2.connect_to_region( args.region, profile_name=args.profile )
+        else:
+            ec2_conn = boto.connect_ec2( profile_name=args.profile )
     else:
-        ec2_conn = boto.connect_ec2( profile_name=args.profile )
+        if args.region:
+            ec2_conn = boto.ec2.connect_to_region( args.region )
+        else:
+            ec2_conn = boto.connect_ec2()
+ 
     return ec2_conn
     
 

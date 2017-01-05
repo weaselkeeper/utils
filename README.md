@@ -17,7 +17,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -d, --debug           Enable debugging during execution.
   -p PROFILE, --profile PROFILE
-                        Which AWS profile to use, defaults to default
+                        Which AWS profile to use.
   -r REGION, --region REGION
                         Must be valid region in AWS_REGIONS list, if empty,
                         defaults to us-east-1
